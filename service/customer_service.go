@@ -2,9 +2,9 @@ package service
 
 import (
 	"database/sql"
-	"errors"
+	"go-hexagonal-architecture/errs"
+	"go-hexagonal-architecture/logs"
 	"go-hexagonal-architecture/repository"
-	"log"
 )
 
 type customerService struct {
@@ -18,8 +18,8 @@ func NewCustomerService(custRepo repository.CustomerRepository) CustomerService 
 func (s customerService) GetCustomers() ([]CustomerResponse, error) {
 	customers, err := s.custRepo.GetAll()
 	if err != nil {
-		log.Println(err)
-		return nil, err
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
 	}
 
 	custResponses := []CustomerResponse{}
@@ -39,11 +39,11 @@ func (s customerService) GetCustomer(id int) (*CustomerResponse, error) {
 	customer, err := s.custRepo.GetById(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, errors.New("customer not found")
+			return nil, errs.NewValidationError("customer not found")
 		}
 
-		log.Println(err)
-		return nil, err
+		logs.Error(err)
+		return nil, errs.NewUnexpectedError()
 	}
 
 	custResponses := CustomerResponse{

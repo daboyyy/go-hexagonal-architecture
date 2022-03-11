@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"go-hexagonal-architecture/service"
 	"net/http"
@@ -20,8 +19,7 @@ func NewCustomerHandler(custSrv service.CustomerService) customerHandler {
 func (h customerHandler) GetCustomers(w http.ResponseWriter, r *http.Request) {
 	customers, err := h.custSrv.GetCustomers()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, err)
+		handleError(w, err)
 		return
 	}
 
@@ -34,8 +32,7 @@ func (h customerHandler) GetCustomer(w http.ResponseWriter, r *http.Request) {
 
 	customer, err := h.custSrv.GetCustomer(customerID)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, err)
+		handleError(w, err)
 		return
 	}
 
