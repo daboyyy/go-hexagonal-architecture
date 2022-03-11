@@ -21,7 +21,7 @@ func (r customerRepositoryDB) GetAll() ([]Customer, error) {
 	return customers, nil
 }
 
-func (r customerRepositoryDB) GeyById(id int) (*Customer, error) {
+func (r customerRepositoryDB) GetById(id int) (*Customer, error) {
 	customer := Customer{}
 	query := "select customer_id, name, date_of_birth, city, zipcode, status from customers where customer_id=?"
 	err := r.db.Get(&customer, query, id)
